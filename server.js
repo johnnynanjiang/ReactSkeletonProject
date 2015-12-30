@@ -8,5 +8,5 @@ var server = app.listen(8081, function() {
     var host = server.address().address;
     var port = server.address().port;
 
-    console.log("running on http://localhost:%s", port);
+    console.log("running on http://localhost:8081/index.html");
 });

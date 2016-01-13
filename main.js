@@ -51,8 +51,10 @@ class CommentForm extends React.Component {
         super(props);
         this.state = {author: "", text: ""};
 
+        //Bind this to the member methods, otherwise things like onChange={this.handleAuthorChange} will fail
         this.handleAuthorChange = this.handleAuthorChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
 
         console.log("CommentForm.constructor()");
     }
@@ -65,11 +67,27 @@ class CommentForm extends React.Component {
         this.setState({text: e.target.value});
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+
+        var author = this.state.author.trim();
+        var text = this.state.text.trim();
+
+        if (!author || !text) {
+            return;
+        }
+
+        // send request to server
+        this.setState({author: '', text: ''});
+
+        console.log("CommentForm.handleSubmit()");
+    }
+
     render() {
-        console.log("CommentForm.render()" + this.state.author + ", " + this.state.text);
+        console.log("CommentForm.render(), author: {0}, state: {1}.".format(this.state.author, this.state.text));
 
         return (
-            <form className="commentForm">
+            <form className="commentForm" onSubmit={this.handleSubmit}>
                 <p>
                     <input type="text" placeholder="Your name" value={this.state.author} onChange={this.handleAuthorChange} />
                     <input type="text" placeholder="Say something..." value={this.state.text} onChange={this.handleTextChange} />

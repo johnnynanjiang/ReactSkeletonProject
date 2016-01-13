@@ -8,6 +8,8 @@ class CommentBox extends React.Component {
         super(props);
         this.state = {data: []};
 
+        this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
+        
         console.log("CommentBox.constructor()");
     }
 
@@ -17,6 +19,15 @@ class CommentBox extends React.Component {
         console.log("CommentBox.componentDidMount()");
     }
 
+    handleCommentSubmit(comment) {
+        var comments = this.state.data;
+        comment.id = Date.now();
+        var newComments = comments.concat([comment]);
+        this.setState({data: newComments});
+
+        console.log("CommentBox.handleCommentSubmit(), the comment is {author: {0}, text: {1}}".format(comment.author, comment.text));
+    }
+
     render() {
         console.log("CommentBox.render()");
 
@@ -24,7 +35,7 @@ class CommentBox extends React.Component {
             <div className="commentBox">
                 Hello, world! I am a CommentBox.
                 <CommentList data={this.state.data}/>
-                <CommentForm />
+                <CommentForm onCommentSubmit={this.handleCommentSubmit} />
             </div>
         );
     }
@@ -51,7 +62,7 @@ class CommentForm extends React.Component {
         super(props);
         this.state = {author: "", text: ""};
 
-        //Bind this to the member methods, otherwise things like onChange={this.handleAuthorChange} will fail
+        // Bind this to the member methods, otherwise things like onChange={this.handleAuthorChange} will fail
         this.handleAuthorChange = this.handleAuthorChange.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -76,6 +87,9 @@ class CommentForm extends React.Component {
         if (!author || !text) {
             return;
         }
+
+        // callback
+        this.props.onCommentSubmit({author: author, text: text});
 
         // send request to server
         this.setState({author: '', text: ''});
